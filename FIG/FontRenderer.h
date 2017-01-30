@@ -10,7 +10,7 @@ namespace FIG
         ~FontRenderer();
 
         char * error = nullptr;
-        static const size_t errorLength = 4096;
+        static const size_t errorLength = 1024;
         template<typename... TArgs>
         void PutError(const char * const format, TArgs... args)
         {

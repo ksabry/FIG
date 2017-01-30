@@ -59,8 +59,9 @@ void DrawFont()
 
     std::clock_t current = std::clock();
     double duration = (current - start) / (double)CLOCKS_PER_SEC;
+    std::cout << c / duration << std::endl;
 
-    renderer->Draw(matrix, fgColor, "Hello, World! %d", c);
+    //renderer->Draw(matrix, fgColor, "Hello, World! %d", c);
 }
 
 /////////////////////////////////////////////////////
