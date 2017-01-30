@@ -3,20 +3,39 @@
 #include <map>
 #include "OpenGl.h"
 #include "FontRenderer.h"
+#include "FontSettings.h"
 
 namespace FIG
 {
-    Font::Font(const char * const filename, long faceIndex)
-        : ft(FreeType::GetInstance()), filename(filename), loadFlags(loadFlags), filterMode(filterMode == 0 ? GL_LINEAR : filterMode)
+    Font::Font(const char * const filename, long faceIndex, FontSettings settings)
+        : filename(filename), faceIndex(faceIndex), settings(settings)
     {
-        face = ft->LoadFace(filename, faceIndex);
+        LoadFace();
     }
     Font::~Font()
     {
     }
 
-    FontRenderer* Font::CreateRenderer(float fontsize, FT_Int32 loadFlags, int filterMode)
+    FontRenderer* Font::CreateRenderer(FontRendererSettings settings)
     {
-        return new FontRenderer(this, fontsize, loadFlags, filterMode);
+        return new FontRenderer(this, settings);
     }
+
+    FT_Library Font::CreateLibrary()
+    {
+        FT_Library result;
+        FT_Error error = FT_Init_FreeType(&result);
+        if (error)
+            return nullptr;
+        return result;
+    }
+
+    void Font::LoadFace()
+    {
+        FT_Error error = FT_New_Face(library, filename, faceIndex, &face);
+        if (error)
+            SetError("FT Error (%d) when loading face from font %s, faceIndex %d", error, filename, faceIndex);
+    }
+
+    const FT_Library Font::library = Font::CreateLibrary();
 }

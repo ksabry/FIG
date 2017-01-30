@@ -27,9 +27,6 @@
     <ClInclude Include="OpenGl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FreeType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Font.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -39,18 +36,27 @@
     <ClInclude Include="EngineShared.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FontRendererSettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FontSettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FreeType.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Font.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FontRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FontSettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FontRendererSettings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

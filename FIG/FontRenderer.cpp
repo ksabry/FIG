@@ -7,12 +7,9 @@
 
 namespace FIG
 {
-    FontRenderer::FontRenderer(Font * font, float fontsize, FT_Int32 loadFlags, int filterMode)
-        : font(font), loadFlags(loadFlags), filterMode(filterMode), fontsize((unsigned)(fontsize * 64.f + 0.5f))
+    FontRenderer::FontRenderer(Font * font, FontRendererSettings settings)
+        : font(font), settings(settings)
     {
-        if (filterMode == 0)
-            filterMode = GL_LINEAR;
-
         if (!CreateGlyphs())
             std::cout << error;
         if (!CreateShader(shaderVertexSource, shaderFragmentSource))
@@ -74,11 +71,11 @@ namespace FIG
         glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
         glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
-        filterMode = GL_LINEAR;
-        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, filterMode);
-        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, filterMode);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, settings.filterMode);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, settings.filterMode);
 
-        FT_Set_Char_Size(font->face, fontsize, fontsize, 96, 96);
+        FT_F26Dot6 f266_fontsize = (long)(settings.fontSize * 64.f + 0.5f);
+        FT_Set_Char_Size(font->face, f266_fontsize, f266_fontsize, 96, 96);
 
         FT_Pos bboxWidth = font->face->bbox.xMax - font->face->bbox.xMin;
         FT_Pos bboxHeight = font->face->bbox.yMax - font->face->bbox.yMin;
@@ -103,10 +100,10 @@ namespace FIG
 
     bool FontRenderer::CreateGlyph(FT_ULong charCode, FT_UInt glyphIndex, unsigned char* bitmapData)
     {
-        FT_Error ftError = FT_Load_Glyph(font->face, glyphIndex, loadFlags);
+        FT_Error ftError = FT_Load_Glyph(font->face, glyphIndex, settings.glyphLoadFlags);
         if (ftError)
         {
-            PutError("FT Error (%d) when loading glyph at index %d", ftError, glyphIndex);
+            SetError("FT Error (%d) when loading glyph at index %d", ftError, glyphIndex);
             return false;
         }
 
@@ -114,7 +111,7 @@ namespace FIG
         ftError = FT_Get_Glyph(font->face->glyph, &glyph);
         if (ftError)
         {
-            PutError("FT Error (%d) when getting glyph at index %d", ftError, glyphIndex);
+            SetError("FT Error (%d) when getting glyph at index %d", ftError, glyphIndex);
             return false;
         }
 
@@ -180,7 +177,7 @@ namespace FIG
             GLsizei length;
             char* buff = new char[errorLength];
             glGetShaderInfoLog(vertexShader, errorLength, &length, buff);
-            PutError("Could not compile vertex shader:\n%s", buff);
+            SetError("Could not compile vertex shader:\n%s", buff);
             return false;
         }
 
@@ -194,7 +191,7 @@ namespace FIG
             GLsizei length;
             char* buff = new char[errorLength];
             glGetShaderInfoLog(fragmentShader, errorLength, &length, buff);
-            PutError("Could not compile fragment shader:\n%s", buff);
+            SetError("Could not compile fragment shader:\n%s", buff);
             return false;
         }
 
@@ -211,7 +208,7 @@ namespace FIG
             GLsizei length;
             char* buff = new char[errorLength];
             glGetProgramInfoLog(shader, errorLength, &length, buff);
-            PutError("Could not link program:\n%s", buff);
+            SetError("Could not link program:\n%s", buff);
             return false;
         }
 

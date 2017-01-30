@@ -1,18 +1,21 @@
 #pragma once
 #include "Font.h"
+#include "FontRendererSettings.h"
 
 namespace FIG
 {
     class ENGINE_SHARED FontRenderer
     {
     public:
-        FontRenderer(Font* font, float fontsize, FT_Int32 loadFlags = FT_LOAD_DEFAULT, int filterMode = 0);
+        FontRenderer(Font* font, FontRendererSettings settings);
         ~FontRenderer();
+
+        FontRendererSettings settings;
 
         char * error = nullptr;
         static const size_t errorLength = 1024;
         template<typename... TArgs>
-        void PutError(const char * const format, TArgs... args)
+        void SetError(const char * const format, TArgs... args)
         {
             if (format == nullptr)
                 error = nullptr;
@@ -69,9 +72,6 @@ namespace FIG
 
     private:
         Font* font;
-        unsigned fontsize;
-        FT_Int32 loadFlags;
-        int filterMode;
 
         FT_UInt glyphIndeces[256];
         unsigned texture;

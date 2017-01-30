@@ -6,7 +6,6 @@
 #include <ctime>
 #include <fstream>
 
-#include "FreeType.h"
 #include "OpenGl.h"
 
 #include "Font.h"
@@ -20,7 +19,7 @@ std::clock_t start;
 void InitFont()
 {
     static auto font = Font("/Windows/Fonts/times.ttf");
-    renderer = font.CreateRenderer(24);
+    renderer = font.CreateRenderer({ 24 });
 }
 
 void DrawFont()
@@ -61,7 +60,7 @@ void DrawFont()
     double duration = (current - start) / (double)CLOCKS_PER_SEC;
     std::cout << c / duration << std::endl;
 
-    //renderer->Draw(matrix, fgColor, "Hello, World! %d", c);
+    renderer->Draw(matrix, fgColor, "Hello, World! %d", c);
 }
 
 /////////////////////////////////////////////////////
