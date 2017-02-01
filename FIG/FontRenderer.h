@@ -28,20 +28,62 @@ namespace FIG
             }
         }
 
+        static const float defaultColorFg[4];
+        static const float defaultColorBg[4];
+
+        template<typename... TArgs>
+        void DrawDirect(int x, int y, const char * const text, TArgs... args)
+        {
+            DrawDirect(x, y, defaultColorFg, text, args...);
+        }
+        template<typename... TArgs>
+        void DrawDirect(int x, int y, const float(&colorFg)[4], const char * const text, TArgs... args)
+        {
+            DrawDirect(x, y, colorFg, defaultColorBg, text, args...);
+        }
+        template<typename... TArgs>
+        void DrawDirect(int x, int y, const float(&colorFg)[4], const float(&colorBg)[4], const char * const text, TArgs... args)
+        {
+            // TODO: optimize? cache last viewport transform?
+            GLint m_viewport[4];
+            glGetIntegerv(GL_VIEWPORT, m_viewport);
+
+            float left = (float)m_viewport[0] - x;
+            float top = (float)m_viewport[1] - y;
+            float right = (float)m_viewport[2] - x;
+            float bottom = (float)m_viewport[3] - y;
+            float nearVal = -1.0;
+            float farVal = 1.0;
+
+            float X = 2 / (right - left),
+                Y = 2 / (top - bottom),
+                Z = -2 / (farVal - nearVal),
+                Tx = -(right + left) / (right - left),
+                Ty = -(top + bottom) / (top - bottom),
+                Tz = -(farVal + nearVal) / (farVal - nearVal);
+
+            float transform[16] = {
+                X, 0, 0, Tx,
+                0, Y, 0, Ty,
+                0, 0, Z, Tz,
+                0, 0, 0, 1
+            };
+
+            Draw(transform, colorFg, colorBg, text, args...);
+        }
+
         template<typename... TArgs>
         void Draw(const char * const text, TArgs... args)
         {
-            float colorFg[4] = { 1.0, 1.0, 1.0, 1.0 };
-            return Draw(colorFg, text, args...);
+            return Draw(defaultColorFg, text, args...);
         }
         template<typename... TArgs>
-        void Draw(float(&colorFg)[4], const char * const text, TArgs... args)
+        void Draw(const float(&colorFg)[4], const char * const text, TArgs... args)
         {
-            float colorBg[4] = { 0.0, 0.0, 0.0, 0.0 };
-            return Draw(colorFg, colorBg, text, args...);
+            return Draw(colorFg, defaultColorBg, text, args...);
         }
         template<typename... TArgs>
-        void Draw(float(&colorFg)[4], float(&colorBg)[4], const char * const text, TArgs... args)
+        void Draw(const float(&colorFg)[4], const float(&colorBg)[4], const char * const text, TArgs... args)
         {
             float transform[16] = {
                 1.0, 0.0, 0.0, 0.0,
@@ -52,25 +94,23 @@ namespace FIG
             return Draw(transform, colorFg, colorBg, text, args...);
         }
         template<typename... TArgs>
-        void Draw(float(&transform)[16], const char * const text, TArgs... args)
+        void Draw(const float(&transform)[16], const char * const text, TArgs... args)
         {
-            float colorFg[4] = { 1.0, 1.0, 1.0, 1.0 };
-            return Draw(transform, colorFg, text, args...);
+            return Draw(transform, defaultColorFg, text, args...);
         }
         template<typename... TArgs>
-        void Draw(float(&transform)[16], float(&colorFg)[4], const char * const text, TArgs... args)
+        void Draw(const float(&transform)[16], const float(&colorFg)[4], const char * const text, TArgs... args)
         {
-            float colorBg[4] = {0.0, 0.0, 0.0, 0.0};
-            return Draw(transform, colorFg, colorBg, text, args...);
+            return Draw(transform, colorFg, defaultColorBg, text, args...);
         }
         template<typename... TArgs>
-        void Draw(float(&transform)[16], float(&colorFg)[4], float(&colorBg)[4], const char * const text, TArgs... args)
+        void Draw(const float(&transform)[16], const float(&colorFg)[4], const float(&colorBg)[4], const char * const text, TArgs... args)
         {
             char buffer[1024];
             sprintf_s(buffer, text, args...);
             Draw(transform, colorFg, colorBg, buffer);
         }
-        void Draw(float(&transform)[16], float(&colorFg)[4], float(&colorBg)[4], const char * const text);
+        void Draw(const float(&transform)[16], const float(&colorFg)[4], const float(&colorBg)[4], const char * const text);
 
         BoundingBox Bounds(const char * const text);
 
@@ -95,7 +135,7 @@ namespace FIG
 
         bool CreateShader(const char * const vertexSource, const char * const fragmentSource);
         bool SetShaderData();
-        void SetUniforms(float(&transform)[16], float(&colorFg)[4], float(&colorBg)[4], const char * const text, unsigned length, float* positions);
+        void SetUniforms(const float(&transform)[16], const float(&colorFg)[4], const float(&colorBg)[4], const char * const text, unsigned length, float* positions);
     };
     
     extern const char * const shaderVertexSource;

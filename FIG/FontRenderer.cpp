@@ -22,7 +22,10 @@ namespace FIG
     {
     }
 
-    void FontRenderer::Draw(float(&transform)[16], float(&colorFg)[4], float(&colorBg)[4], const char * const text)
+    const float FontRenderer::defaultColorFg[4]{ 1.0, 1.0, 1.0, 1.0 };
+    const float FontRenderer::defaultColorBg[4]{ 0.0, 0.0, 0.0, 0.0 };
+
+    void FontRenderer::Draw(const float(&transform)[16], const float(&colorFg)[4], const float(&colorBg)[4], const char * const text)
     {
         size_t length = strlen(text);
         if (length == 0)
@@ -245,7 +248,7 @@ namespace FIG
         return true;
     }
 
-    void FontRenderer::SetUniforms(float(&transform)[16], float(&colorFg)[4], float(&colorBg)[4], const char * const text, unsigned length, float* positions)
+    void FontRenderer::SetUniforms(const float(&transform)[16], const float(&colorFg)[4], const float(&colorBg)[4], const char * const text, unsigned length, float* positions)
     {
         glUniformMatrix4fv(glGetUniformLocation(shader, "transform"), 1, GL_TRUE, transform);
         glUniform4fv(glGetUniformLocation(shader, "fgColor"), 1, colorFg);

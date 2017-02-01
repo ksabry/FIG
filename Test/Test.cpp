@@ -60,7 +60,7 @@ void DrawFont()
     double duration = (current - start) / (double)CLOCKS_PER_SEC;
     std::cout << c / duration << std::endl;
 
-    renderer->Draw(matrix, fgColor, "Hello, World! %d", c);
+    renderer->DrawDirect(100, 100, fgColor, "Hello, World! %d", c);
 }
 
 /////////////////////////////////////////////////////
