@@ -2,19 +2,16 @@
 Fonts In Gl!
 
 ## TODO
-- Fix project dependency issues in Release
-
 - Cache font faces upon load (Freetype may do this already internally)
 - Cache font renderers with equivalent options
 - Possibly cache results of GetPositions of frequently requested strings (the overhead of this may make it not worth the effort at all)
 
-- `Font::Create` should take `FontOptions` struct 
-- `Font::CreateRenderer` should take `FontRendererOptions` struct
 - `FontRenderer::Draw` should take `FontDrawOptions` struct
+- Specify bounding box options in `Draw` and wordwrapping option
+` Specify text alignment options
 
 - Add support for more direct control over `FontRenderer::Draw`; allow a glsl snippet to be inserted into fragment shader?
 
-- Create `FontRenderer::DrawDirect` for drawing 1 to 1 screen pixels which takes `FontDrawDirectOptions`
 - Implement hinting and subpixels (only enablable from `FontDrawDirectOptions`)
 
 ## Building
@@ -33,9 +30,9 @@ Create a `Font` object with
  
  To render a font you must first create a `FontRenderer` object:
  ~~~~
- FontRenderer* renderer = font.CreateRenderer(24);
+ FontRenderer* renderer = font.CreateRenderer({24});
  ~~~~
- The `24` is the size (height) that the font will be rendered. Avoid creating a lot of renderers for different sizes, 
+ The `{24}` is a FontRendererSettings struct being initialized with a single parameter, the size (height) that the font will be rendered. Avoid creating a lot of renderers for different sizes, 
  and definitely avoid creating renderers every frame. If you need many different sizes, just create one renderer at as large a size as
  you will need, and scale your the transformation matrix you pass into `FontRenderer::Draw`.
  
