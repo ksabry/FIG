@@ -1,6 +1,8 @@
 #pragma once
+
 #include "Font.h"
 #include "FontRendererSettings.h"
+#include "BoundingBox.h"
 
 namespace FIG
 {
@@ -70,6 +72,8 @@ namespace FIG
         }
         void Draw(float(&transform)[16], float(&colorFg)[4], float(&colorBg)[4], const char * const text);
 
+        BoundingBox Bounds(const char * const text);
+
     private:
         Font* font;
 
@@ -87,7 +91,10 @@ namespace FIG
         static unsigned nextPowerOfTwo(unsigned n);
         void GetCharacterPositions(const char* const text, size_t textLength, float* points);
 
+        unsigned rawPositionsVbo;
+
         bool CreateShader(const char * const vertexSource, const char * const fragmentSource);
+        bool SetShaderData();
         void SetUniforms(float(&transform)[16], float(&colorFg)[4], float(&colorBg)[4], const char * const text, unsigned length, float* positions);
     };
     

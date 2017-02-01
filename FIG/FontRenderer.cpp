@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "FontRenderer.h"
+
 #include "OpenGl.h"
 #include <assert.h>
 #include <iostream>
@@ -13,6 +14,8 @@ namespace FIG
         if (!CreateGlyphs())
             std::cout << error;
         if (!CreateShader(shaderVertexSource, shaderFragmentSource))
+            std::cout << error;
+        if (!SetShaderData())
             std::cout << error;
     }
     FontRenderer::~FontRenderer()
@@ -29,39 +32,37 @@ namespace FIG
         GetCharacterPositions(text, length, points);
 
         glUseProgram(shader);
-            
-        static GLuint rawPositionsVbo;
-        if (rawPositionsVbo == 0)
-        {
-            glGenBuffers(1, &rawPositionsVbo);
-            float rawPositions[8] = {
-                0.f, 0.f,
-                1.f, 0.f,
-                0.f, 1.f,
-                1.f, 1.f
-            };
-            glBindBuffer(GL_ARRAY_BUFFER, rawPositionsVbo);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, rawPositions, GL_STATIC_DRAW);
-            glEnableVertexAttribArray(0);
-            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+        glBindBuffer(GL_ARRAY_BUFFER, rawPositionsVbo);
 
-            glUniform2f(glGetUniformLocation(shader, "charSize"), (float)charWidth, (float)charHeight);
-
-            float sizes[512];
-            for (unsigned chr = 0; chr < 256; chr++)
-            {
-                sizes[2 * chr] = (float)metrics[chr].width / 64;
-                sizes[2 * chr + 1] = (float)metrics[chr].height / 64;
-            }
-            glUniform2fv(glGetUniformLocation(shader, "sizes"), 256, sizes);
-        }
-            
         unsigned chunks = (length - 1) / 256 + 1;
         for (unsigned chunk = 0; chunk < chunks; chunk++)
         {
             SetUniforms(transform, colorFg, colorBg, text + chunk * 256, chunk == chunks - 1 ? (length - 1) % 256 + 1 : 256, points + chunk * 512);
             glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, length);
         }
+    }
+
+    BoundingBox FontRenderer::Bounds(const char * const text)
+    {
+        size_t length = strlen(text);
+        if (length == 0)
+            return BoundingBox{0.f, 0.f, 0.f, 0.f};
+
+        float* points = new float[2 * length];
+        GetCharacterPositions(text, length, points);
+        
+        float minX = points[0], maxX = points[0], minY = points[1], maxY = points[1];
+        for (size_t i = 1; i < length; i++)
+        {
+            float lowX = points[2 * i], lowY = points[2 * i + 1];
+            float highX = points[2 * i] + metrics[text[i]].width / 64, highY = points[2 * i + 1] + metrics[text[i]].height / 64;
+
+            minX = lowX < minX ? lowX : minX;
+            minX = highX > maxX ? highX : maxX;
+            minX = lowY < minY ? lowY : minY;
+            minX = highY > maxY ? highY : maxY;
+        }
+        return BoundingBox{minX, maxX, minY, maxY};
     }
 
     bool FontRenderer::CreateGlyphs()
@@ -211,6 +212,35 @@ namespace FIG
             SetError("Could not link program:\n%s", buff);
             return false;
         }
+
+        return true;
+    }
+
+    bool FontRenderer::SetShaderData()
+    {
+        glUseProgram(shader);
+
+        glGenBuffers(1, &rawPositionsVbo);
+        float rawPositions[8] = {
+            0.f, 0.f,
+            1.f, 0.f,
+            0.f, 1.f,
+            1.f, 1.f
+        };
+        glBindBuffer(GL_ARRAY_BUFFER, rawPositionsVbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, rawPositions, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+        glUniform2f(glGetUniformLocation(shader, "charSize"), (float)charWidth, (float)charHeight);
+
+        float sizes[512];
+        for (unsigned chr = 0; chr < 256; chr++)
+        {
+            sizes[2 * chr] = (float)metrics[chr].width / 64;
+            sizes[2 * chr + 1] = (float)metrics[chr].height / 64;
+        }
+        glUniform2fv(glGetUniformLocation(shader, "sizes"), 256, sizes);
 
         return true;
     }

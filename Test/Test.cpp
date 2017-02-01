@@ -19,7 +19,7 @@ std::clock_t start;
 void InitFont()
 {
     static auto font = Font("/Windows/Fonts/times.ttf");
-    renderer = font.CreateRenderer({ 24 });
+    renderer = font.CreateRenderer({ 40 });
 }
 
 void DrawFont()
@@ -263,6 +263,8 @@ int InitGL(GLvoid)										// All Setup For OpenGL Goes Here
     glClearDepth(1.0f);									// Depth Buffer Setup
     glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
     glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
+    glEnable(GL_BLEND); 
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
 
     glewExperimental = TRUE;

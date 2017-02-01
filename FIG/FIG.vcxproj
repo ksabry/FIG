@@ -151,6 +151,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="EngineShared.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FontSettings.h" />
