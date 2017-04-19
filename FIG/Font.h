@@ -14,6 +14,11 @@ namespace FIG
     {
     public:
         Font(const char * const filename, long faceIndex = 0, FontSettings settings = FontSettings());
+        template<typename... TArgs>
+        Font(const char * const filename, long faceIndex = 0, TArgs... args)
+            : FontRenderer(font, FontSettings(args...))
+        {
+        }
         ~Font();
 
         FontSettings settings;
@@ -34,6 +39,11 @@ namespace FIG
 
         FT_Face face;
         FontRenderer* CreateRenderer(FontRendererSettings settings);
+        template<typename... TArgs>
+        FontRenderer* CreateRenderer(TArgs... args)
+        {
+            return CreateRenderer(FontRendererSettings(args...));
+        }
         static FT_Library CreateLibrary();
 
     private:

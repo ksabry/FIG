@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef ENGINE_EXPORTS
+#ifdef FIG_EXPORTS
 #define ENGINE_SHARED __declspec( dllexport )
 #define ENGINE_TEMPLATE
 #else

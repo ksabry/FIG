@@ -5,3 +5,7 @@
 #include <gl/GLU.h>
 
 #define BUFFER_OFFSET(expr) ((char*)NULL + (expr)) 
+
+#include <sstream>
+
+const char* GetGLError();

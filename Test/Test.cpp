@@ -18,8 +18,18 @@ std::clock_t start;
 
 void InitFont()
 {
-    static auto font = Font("/Windows/Fonts/times.ttf");
-    renderer = font.CreateRenderer({ 40 });
+    static auto font = Font("C:/Windows/Fonts/times.ttf");
+    if (font.error)
+    {
+        std::cout << font.error;
+        renderer = nullptr;
+    }
+    else
+    {
+        renderer = font.CreateRenderer(
+            FONT_SIZE, 50.f
+        );
+    }
 }
 
 void DrawFont()
@@ -27,40 +37,22 @@ void DrawFont()
     if (!start)
         start = std::clock();
 
-    GLint m_viewport[4];
-    glGetIntegerv(GL_VIEWPORT, m_viewport);
-
-    float left = (float)m_viewport[0];
-    float top = (float)m_viewport[1] - 100.f;
-    float right = (float)m_viewport[2];
-    float bottom = (float)m_viewport[3] - 100.f;
-    float nearVal = -1.0;
-    float farVal = 1.0;
-
-    float X = 2 / (right - left),
-          Y = 2 / (top - bottom),
-          Z = -2 / (farVal - nearVal),
-          Tx = -(right + left) / (right - left),
-          Ty = -(top + bottom) / (top - bottom),
-          Tz = -(farVal + nearVal) / (farVal - nearVal);
-    
-    float matrix[16] = {
-        X, 0, 0, Tx,
-        0, Y, 0, Ty,
-        0, 0, Z, Tz,
-        0, 0, 0, 1
-    };
-
-    float fgColor[4] = { 1.0, 0.0, 1.0, 1.0 };
+    float fgColor[4] = { 0.0, 0.0, 1.0, 1.0 };
 
     static int c = 0;
     c++;
-
     std::clock_t current = std::clock();
     double duration = (current - start) / (double)CLOCKS_PER_SEC;
-    std::cout << c / duration << std::endl;
 
-    renderer->DrawDirect(100, 100, fgColor, "Hello, World! %d", c);
+    renderer->DrawDirect(400, 100, fgColor, "Hello, World!\nAverage of %.2f fps", c / duration);
+
+//    renderer->DrawDirect(910, 10, fgColor, R"raw(
+//Lorem ipsum dolor sit amet, no sed pertinacia interesset, mel ut enim minim copiosae, utamur scripserit cu eam. Novum nullam vim no, vel ea commodo discere. Laoreet prodesset ei vis, oblique convenire qui ei. Evertitur pertinacia definitionem usu ei. Vitae dicant sapientem vel et.
+//Ut vix minim corpora. Qui et primis possim integre. Nam eu purto everti eligendi, pro id modo putant ponderum. Quo dolores definiebas at, no putant noluisse eos. Mel ex legere persequeris. Ei vim deserunt vituperata, sed te velit denique.
+//Cum iusto soleat graeco ex, eu sit amet suscipit facilisi. Deseruisse adversarium ex eam, vis deserunt deseruisse et. Cu dolorem nominavi scaevola sit, vero melius te pri. Cu eam invidunt torquatos, sea ne cetero contentiones, diam tempor id nam. Ad sed modus verear pertinax, impedit torquatos et eum. Atqui percipit ocurreret usu eu. Oportere prodesset adversarium te pri, est ut lucilius aliquando torquatos.
+//Duo persius detracto at, qui molestie definitionem cu, te vide adhuc homero eos. Wisi omnesque eam eu. Pro no ferri luptatum temporibus, vel ut luptatum iudicabit, ex essent alterum has. Ei illud eligendi vel, ex idque assum vel. Te vel sapientem honestatis, eu iuvaret definitiones necessitatibus pri.
+//Falli dolore consequuntur id per, vim delectus definiebas complectitur no, mei at purto delenit principes. Et mel stet clita, ei munere quaeque cum, congue reprimique nec ne. Quo vide apeirian ad. Modus putant delicatissimi sed ad, id alia malis nonumes eam. Et nulla accusam vis, ut zril sapientem splendide sit. Eu nibh dictas duo, eu inani luptatum nec.
+//)raw");
 }
 
 /////////////////////////////////////////////////////
@@ -259,7 +251,7 @@ GLvoid KillGLWindow(GLvoid)								// Properly Kill The Window
 int InitGL(GLvoid)										// All Setup For OpenGL Goes Here
 {
     glShadeModel(GL_SMOOTH);							// Enable Smooth Shading
-    glClearColor(0.3f, 0.3f, 0.3f, 1.0f);				// Black Background
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);				// Black Background
     glClearDepth(1.0f);									// Depth Buffer Setup
     glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
     glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
@@ -426,8 +418,9 @@ int WINAPI WinMain(HINSTANCE	hInstance,			// Instance
 
                                                         //catch any exceptions that where thrown
     }
-    catch (std::exception &) {
-        //    MessageBox(NULL, e.what(), L"CAUGHT AN EXCEPTION", MB_OK | MB_ICONINFORMATION);
+    catch (std::exception &e) {
+        std::cout << e.what();
+        //MessageBox(NULL, e.what(), L"CAUGHT AN EXCEPTION", MB_OK | MB_ICONINFORMATION);
     }
 
     return (msg.wParam);							// Exit The Program
