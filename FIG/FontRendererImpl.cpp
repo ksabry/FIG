@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "FontRendererImpl.h"
 #include "FontImpl.h"
+#include "FontDrawSettings.h"
 
 #include "OpenGl.h"
 #include <assert.h>
@@ -14,11 +15,11 @@ namespace FIG
         : font(font), settings(settings)
     {
         if (!CreateGlyphs())
-            std::cout << error;
+            return;
         if (!CreateShader(shaderVertexSource, shaderFragmentSource))
-            std::cout << error;
+            return;
         if (!SetShaderData())
-            std::cout << error;
+            return;
     }
     FontRendererImpl::~FontRendererImpl()
     {
@@ -34,16 +35,46 @@ namespace FIG
     const float FontRendererImpl::defaultColorFg[4]{ 1.0, 1.0, 1.0, 1.0 };
     const float FontRendererImpl::defaultColorBg[4]{ 0.0, 0.0, 0.0, 0.0 };
 
-    void FontRendererImpl::DrawDirect(int x, int y, const float(&colorFg)[4], const float(&colorBg)[4], const char * const text)
+    void FontRendererImpl::Draw(FontDrawSettings drawSettings, const char * const text)
+    {
+        auto newSettings = drawSettings.Copy();
+
+        if (newSettings.transform == nullptr)
+        {
+            float transform[16] = {
+                1,  0,  0,  0,
+                0,  1,  0,  0,
+                0,  0,  1,  0,
+                0,  0,  0,  1
+            };
+            newSettings.transform = transform;
+        }
+        if (newSettings.colorFg == nullptr)
+        {
+            newSettings.colorFg = defaultColorFg;
+        }
+        if (newSettings.colorBg == nullptr)
+        {
+            float colorBg[4] = { newSettings.colorFg[0], newSettings.colorFg[1], newSettings.colorFg[2], 0.0 };
+            newSettings.colorBg = colorBg;
+        }
+
+        if (drawSettings.direct)
+            DrawDirect(newSettings, text);
+        else
+            DrawInternal(newSettings, text);
+    }
+
+    void FontRendererImpl::DrawDirect(FontDrawSettings settings, const char * const text)
     {
         int m_viewport[4];
         glGetIntegerv(GL_VIEWPORT, m_viewport);
         GetGLError();
 
-        float left = (float)m_viewport[0] - x;
-        float top = (float)m_viewport[1] - y;
-        float right = (float)m_viewport[2] - x;
-        float bottom = (float)m_viewport[3] - y;
+        float left = (float)m_viewport[0] - settings.directX;
+        float top = (float)m_viewport[1] - settings.directY;
+        float right = (float)m_viewport[2] - settings.directX;
+        float bottom = (float)m_viewport[3] - settings.directY;
         float nearVal = -1.0;
         float farVal = 1.0;
 
@@ -61,10 +92,13 @@ namespace FIG
             Tx, Ty, Tz, 1
         };
 
-        Draw(transform, colorFg, colorBg, text);
+        auto newSettings = settings.Copy();
+        newSettings.transform = transform;
+
+        DrawInternal(newSettings, text);
     }
 
-    void FontRendererImpl::Draw(const float(&transform)[16], const float(&colorFg)[4], const float(&colorBg)[4], const char * const text)
+    void FontRendererImpl::DrawInternal(FontDrawSettings drawSettings, const char * const text)
     {
         glBindVertexArray(0u);
         ReturnIfGLError();
@@ -94,7 +128,7 @@ namespace FIG
         glBindBuffer(GL_ARRAY_BUFFER, rawPositionsVbo);
         ReturnIfGLError();
 
-        SetRenderData(transform, colorFg, colorBg, text, length, points);
+        SetRenderData(drawSettings.transform, drawSettings.colorFg, drawSettings.colorBg, text, length, points);
         glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, length);
         ReturnIfGLError();
 
@@ -388,7 +422,7 @@ namespace FIG
         return true;
     }
 
-    void FontRendererImpl::SetRenderData(const float(&transform)[16], const float(&colorFg)[4], const float(&colorBg)[4], const char * const text, unsigned length, float* positions)
+    void FontRendererImpl::SetRenderData(const float* transform, const float* colorFg, const float* colorBg, const char * const text, unsigned length, float* positions)
     {
         glUniformMatrix4fv(glGetUniformLocation(shader, "transform"), 1, GL_FALSE, transform);
         glUniform4fv(glGetUniformLocation(shader, "fgColor"), 1, colorFg);

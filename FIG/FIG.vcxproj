@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClInclude Include="FieldInitializable.h" />
     <ClInclude Include="Font.h" />
+    <ClInclude Include="FontDrawSettings.h" />
     <ClInclude Include="FontRenderer.h" />
     <ClInclude Include="TextAlignment.h" />
     <ClInclude Include="BoundingBox.h" />
@@ -168,6 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Font.cpp" />
+    <ClCompile Include="FontDrawSettings.cpp" />
     <ClCompile Include="FontImpl.cpp" />
     <ClCompile Include="FontRenderer.cpp" />
     <ClCompile Include="FontRendererImpl.cpp" />

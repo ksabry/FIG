@@ -28,13 +28,10 @@ void InitFont()
     }
     else
     {
-        renderer = new FontRenderer(&font, {
-            FONT_SIZE, 50
-        });
-        //renderer = font.CreateRenderer(
-        //    FONT_SIZE, 50,
-        //    ALIGNMENT, TextAlignment::Center
-        //);
+        renderer = font.CreateRenderer(
+            FONT_SIZE, 50,
+            ALIGNMENT, TextAlignment::Center
+        );
     }
 }
 
@@ -51,15 +48,14 @@ void DrawFont()
     double duration = (current - start) / (double)CLOCKS_PER_SEC;
 
     if (renderer != nullptr)
-        renderer->DrawDirect(400, 100, fgColor, "Hello, World!\nAverage of %.2f fps", c / duration);
-
-//    renderer->DrawDirect(910, 10, fgColor, R"raw(
-//Lorem ipsum dolor sit amet, no sed pertinacia interesset, mel ut enim minim copiosae, utamur scripserit cu eam. Novum nullam vim no, vel ea commodo discere. Laoreet prodesset ei vis, oblique convenire qui ei. Evertitur pertinacia definitionem usu ei. Vitae dicant sapientem vel et.
-//Ut vix minim corpora. Qui et primis possim integre. Nam eu purto everti eligendi, pro id modo putant ponderum. Quo dolores definiebas at, no putant noluisse eos. Mel ex legere persequeris. Ei vim deserunt vituperata, sed te velit denique.
-//Cum iusto soleat graeco ex, eu sit amet suscipit facilisi. Deseruisse adversarium ex eam, vis deserunt deseruisse et. Cu dolorem nominavi scaevola sit, vero melius te pri. Cu eam invidunt torquatos, sea ne cetero contentiones, diam tempor id nam. Ad sed modus verear pertinax, impedit torquatos et eum. Atqui percipit ocurreret usu eu. Oportere prodesset adversarium te pri, est ut lucilius aliquando torquatos.
-//Duo persius detracto at, qui molestie definitionem cu, te vide adhuc homero eos. Wisi omnesque eam eu. Pro no ferri luptatum temporibus, vel ut luptatum iudicabit, ex essent alterum has. Ei illud eligendi vel, ex idque assum vel. Te vel sapientem honestatis, eu iuvaret definitiones necessitatibus pri.
-//Falli dolore consequuntur id per, vim delectus definiebas complectitur no, mei at purto delenit principes. Et mel stet clita, ei munere quaeque cum, congue reprimique nec ne. Quo vide apeirian ad. Modus putant delicatissimi sed ad, id alia malis nonumes eam. Et nulla accusam vis, ut zril sapientem splendide sit. Eu nibh dictas duo, eu inani luptatum nec.
-//)raw");
+    {
+        renderer->Draw({
+            DIRECT, true,
+            DIRECT_X, 400,
+            DIRECT_Y, 100,
+            COLOR_FG, fgColor
+        }, "Hello, World!\nAverage of %.2f fps", c / duration);
+    }
 }
 
 /////////////////////////////////////////////////////

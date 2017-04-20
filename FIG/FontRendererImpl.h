@@ -24,13 +24,15 @@ namespace FIG
             return settings;
         }
 
-        void Draw(const float(&transform)[16], const float(&colorFg)[4], const float(&colorBg)[4], const char * const text);
-        void DrawDirect(int x, int y, const float(&colorFg)[4], const float(&colorBg)[4], const char * const text);
+        void Draw(FontDrawSettings drawSettings, const char * const text);
 
         BoundingBox Bounds(const char * const text);
         BoundingBox RenderBounds(const char * const text);
 
     private:
+        void DrawInternal(FontDrawSettings drawSettings, const char * const text);
+        void DrawDirect(FontDrawSettings drawSettngs, const char * const text);
+        
         Font* font;
 
         FontRendererSettings settings;
@@ -74,7 +76,7 @@ namespace FIG
 
         bool CreateShader(const char * const vertexSource, const char * const fragmentSource);
         bool SetShaderData();
-        void SetRenderData(const float(&transform)[16], const float(&colorFg)[4], const float(&colorBg)[4], const char * const text, unsigned length, float* positions);
+        void SetRenderData(const float* transform, const float* colorFg, const float* colorBg, const char * const text, unsigned length, float* positions);
     };
     
     extern const char * const shaderVertexSource;

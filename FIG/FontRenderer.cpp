@@ -2,6 +2,7 @@
 #include "FontRenderer.h"
 
 #include "FontRendererImpl.h"
+#include "FontDrawSettings.h"
 
 namespace FIG
 {
@@ -20,14 +21,9 @@ namespace FIG
         return impl->Settings();
     }
 
-    void FontRenderer::Draw(const float(&transform)[16], const float(&colorFg)[4], const float(&colorBg)[4], const char * const text)
+    void FontRenderer::Draw(FontDrawSettings drawSettings, const char * const text)
     {
-        impl->Draw(transform, colorFg, colorBg, text);
-    }
-
-    void FontRenderer::DrawDirect(int x, int y, const float(&colorFg)[4], const float(&colorBg)[4], const char * const text)
-    {
-        impl->DrawDirect(x, y, colorFg, colorBg, text);
+        impl->Draw(drawSettings, text);
     }
 
     BoundingBox FontRenderer::Bounds(const char * const text)
