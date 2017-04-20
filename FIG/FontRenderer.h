@@ -4,6 +4,8 @@
 #include "FontRendererSettings.h"
 #include "BoundingBox.h"
 
+#pragma warning (disable : 4003)
+
 #define ReturnIfGLError(ret_val) if(CheckGLError())return ret_val
 
 namespace FIG

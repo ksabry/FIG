@@ -6,8 +6,6 @@
 #include <iostream>
 #include FT_GLYPH_H
 
-#pragma warning (disable : 4003)
-
 namespace FIG
 {
     FontRenderer::FontRenderer(Font * font, FontRendererSettings settings)

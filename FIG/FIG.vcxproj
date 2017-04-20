@@ -90,6 +90,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)FIG\middleware\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/showIncludes %(AdditionalOptions)</AdditionalOptions>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,6 +152,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FieldInitializable.h" />
     <ClInclude Include="TextAlignment.h" />
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="EngineShared.h" />

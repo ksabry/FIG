@@ -44,7 +44,8 @@ void DrawFont()
     std::clock_t current = std::clock();
     double duration = (current - start) / (double)CLOCKS_PER_SEC;
 
-    renderer->DrawDirect(400, 100, fgColor, "Hello, World!\nAverage of %.2f fps", c / duration);
+    if (renderer != nullptr)
+        renderer->DrawDirect(400, 100, fgColor, "Hello, World!\nAverage of %.2f fps", c / duration);
 
 //    renderer->DrawDirect(910, 10, fgColor, R"raw(
 //Lorem ipsum dolor sit amet, no sed pertinacia interesset, mel ut enim minim copiosae, utamur scripserit cu eam. Novum nullam vim no, vel ea commodo discere. Laoreet prodesset ei vis, oblique convenire qui ei. Evertitur pertinacia definitionem usu ei. Vitae dicant sapientem vel et.
