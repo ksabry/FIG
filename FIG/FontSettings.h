@@ -1,14 +1,22 @@
 #pragma once
-#include "ft2build.h"
-#include FT_FREETYPE_H
 #include "EngineShared.h"
+#include "FieldInitializable.h"
 
 namespace FIG
 {
-    struct ENGINE_SHARED FontSettings
+    struct ENGINE_SHARED FontSettings : public FieldInitializable<FontSettings>
     {
-        FT_Int32 freetypeLoadFlags;
+        template<typename... TArgs>
+        FontSettings(TArgs... args)
+            : freetypeLoadFlags(0)
+        {
+            FieldInitializable::Init(args...);
+            SetDefaults();
+        }
+        ~FontSettings();
 
-        FontSettings(FT_Int32 freetypeLoadFlags = FT_LOAD_DEFAULT);
+        int freetypeLoadFlags;
+
+        void SetDefaults();
     };
 }

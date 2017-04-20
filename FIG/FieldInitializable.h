@@ -23,6 +23,11 @@ namespace FIG
     struct FieldInitializable
     {
     public:
+        template<typename... TArgs>
+        void Init(TArgs... args)
+        {
+            static_assert(false, "Malformed arguments to FieldInitializable; must be in field, value pairs");
+        }
         template<typename TField, typename TVal, typename... TArgs>
         void Init(TField, TVal val, TArgs... args)
         {
@@ -33,6 +38,10 @@ namespace FIG
         void Init(TField, TVal val)
         {
             SetField<TField>(val);
+        };
+        template<>
+        void Init<>()
+        {
         };
 
         template<typename TField, typename TVal>
