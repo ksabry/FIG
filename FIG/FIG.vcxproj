@@ -153,12 +153,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FieldInitializable.h" />
+    <ClInclude Include="Font.h" />
+    <ClInclude Include="FontRenderer.h" />
     <ClInclude Include="TextAlignment.h" />
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="EngineShared.h" />
-    <ClInclude Include="Font.h" />
+    <ClInclude Include="FontImpl.h" />
     <ClInclude Include="FontSettings.h" />
-    <ClInclude Include="FontRenderer.h" />
+    <ClInclude Include="FontRendererImpl.h" />
     <ClInclude Include="FontRendererSettings.h" />
     <ClInclude Include="OpenGl.h" />
     <ClInclude Include="stdafx.h" />
@@ -166,7 +168,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Font.cpp" />
+    <ClCompile Include="FontImpl.cpp" />
     <ClCompile Include="FontRenderer.cpp" />
+    <ClCompile Include="FontRendererImpl.cpp" />
     <ClCompile Include="FontRendererSettings.cpp" />
     <ClCompile Include="FontSettings.cpp" />
     <ClCompile Include="OpenGl.cpp" />

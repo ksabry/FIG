@@ -21,17 +21,20 @@ void InitFont()
     static auto font = Font("C:/Windows/Fonts/times.ttf", 0, {
         FREETYPE_LOAD_FLAGS, 0
     });
-    if (font.error)
+    if (font.Error())
     {
-        std::cout << font.error;
+        std::cout << font.Error();
         renderer = nullptr;
     }
     else
     {
-        renderer = font.CreateRenderer(
-            FONT_SIZE, 50,
-            ALIGNMENT, TextAlignment::Center
-        );
+        renderer = new FontRenderer(&font, {
+            FONT_SIZE, 50
+        });
+        //renderer = font.CreateRenderer(
+        //    FONT_SIZE, 50,
+        //    ALIGNMENT, TextAlignment::Center
+        //);
     }
 }
 
