@@ -58,7 +58,7 @@ namespace FIG
         {
             char buffer[1024];
             sprintf_s(buffer, text, args...);
-            DrawDirect(x, y, colorFg, colorBg, text);
+            DrawDirect(x, y, colorFg, colorBg, buffer);
         }
         void DrawDirect(int x, int y, const float(&colorFg)[4], const float(&colorBg)[4], const char * const text);
 

@@ -18,7 +18,9 @@ std::clock_t start;
 
 void InitFont()
 {
-    static auto font = Font("C:/Windows/Fonts/times.ttf");
+    static auto font = Font("C:/Windows/Fonts/times.ttf", 0, {
+        FREETYPE_LOAD_FLAGS, 0
+    });
     if (font.error)
     {
         std::cout << font.error;

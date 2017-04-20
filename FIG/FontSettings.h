@@ -19,4 +19,6 @@ namespace FIG
 
         void SetDefaults();
     };
+
+    ADD_FIELD(int, FREETYPE_LOAD_FLAGS, FontSettings, freetypeLoadFlags);
 }
