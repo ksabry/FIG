@@ -27,7 +27,8 @@ void InitFont()
     else
     {
         renderer = font.CreateRenderer(
-            FONT_SIZE, 50.f
+            FONT_SIZE, 50,
+            ALIGNMENT, TextAlignment::Center
         );
     }
 }

@@ -44,21 +44,14 @@ namespace FIG
 
 #define ADD_FIELD(type,fieldName,inheritName,innerField) \
     constexpr _Field<inheritName, __LINE__> fieldName;\
-    template<>\
-    struct _FieldSetter<inheritName, _Field<inheritName, __LINE__>, type>\
-    {\
-        static void set( FieldInitializable <inheritName> * container, type val)\
-        {\
-            inheritName* inherit = (inheritName*)(container);\
-            inherit->innerField = val;\
-        }\
-    };\
     template<typename T>\
     struct _FieldSetter<inheritName, _Field<inheritName, __LINE__>, T>\
     {\
         static void set( FieldInitializable <inheritName> * container, T val)\
         {\
-            static_assert(false, "Invalid type for FontRendererSettings field " #fieldName " (must be " #type ")");\
+            static_assert(std::is_convertible< T, type >::value, "Invalid type for FontRendererSettings field " #fieldName " (must be " #type ")");\
+            inheritName* inherit = (inheritName*)(container);\
+            inherit->innerField = val;\
         }\
     }
 }
