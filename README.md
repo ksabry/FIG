@@ -93,52 +93,58 @@ Delegates the the above constructor, creating a `FontSettings` object using `arg
 ### char\* Font::Error();
 Returns a string representation of an error if one occured. Will be `nullptr` if no errors have occured.
 
-#### FontSettings Font::Settings();
+### FontSettings Font::Settings();
 Returns the `FontSettings` object that was used to intialize the `Font`.
 
-#### FontRenderer\* Font::CreateRenderer(FontRendererSettings settings);
+### FontRenderer\* Font::CreateRenderer(FontRendererSettings settings);
 Create a `FontRenderer` instance associated with the `Font`. This is just a shorthand for using the `FontRenderer` constructor with this instance and the settings. 
 
-#### FontRenderer\* Font::CreateRenderer(TArgs... args);
+### FontRenderer\* Font::CreateRenderer(TArgs... args);
 Delegates to the above method passing in `args` to the `FontRendererSettings` constructor.
 
-#### void Font::Draw(FontRendererDrawSettings settings, const char\* const format, TArgs... args)
+### void Font::Draw(FontRendererDrawSettings settings, const char\* const format, TArgs... args)
 Draw text to the current OpenGL context. The `format` argument will be have c-style string formatting applied using `args`. This method will create a `FontRenderer` instance internally or use a cached version with the same renderer settings. 
+
+---
 
 ### class FontRenderer
 
-#### FontRenderer::FontRenderer(Font\* font, FontRendererSettings settings);
+### FontRenderer::FontRenderer(Font\* font, FontRendererSettings settings);
 Constructs a `FontRenderer` instance from a `Font` and a `FontRendererSettings` object. This will set the error if any freetype2 or opengl initialization steps fail.
 
-#### FontRenderer::FontRenderer(Font\* font, TArgs... args);
+### FontRenderer::FontRenderer(Font\* font, TArgs... args);
 Delegates the the above constructor, creating a `FontRendererSettings` object using `args`.
 
-#### FontRendererSettings FontRenderer::Settings();
+### FontRendererSettings FontRenderer::Settings();
 Returns the `FontRendererSettings` object that was used to intialize the `FontRenderer`.
 
-#### void FontRendererSettings::Draw(FontDrawSettings drawSettings, const char\* const format, TArgs... args);
+### void FontRendererSettings::Draw(FontDrawSettings drawSettings, const char\* const format, TArgs... args);
 Draw text to the current OpenGL context. The `format` argument will be have c-style string formatting applied using `args`. 
 
-#### BoundingBox FontRendererSettings::Bounds(const char\* const format, TArgs... args);
+### BoundingBox FontRendererSettings::Bounds(const char\* const format, TArgs... args);
 Return the bounding box of the string if it was rendered. This bounding box is determined by the font metrics and should be used if you want to draw a selection box over text for example.
 
-#### BoundingBox FontRendererSettings::RenderBounds(const char\* const format, TArgs... args);
+### BoundingBox FontRendererSettings::RenderBounds(const char\* const format, TArgs... args);
 Return the bounding box of the string if it was rendered. This bounding box is the smallest box around all the rendered characters.
+
+---
 
 ### struct BoundingBox
 
-#### float BoundingBox::left, BoundingBox::right, BoundingBox::top, BoundingBox::bottom;
+### float BoundingBox::left, BoundingBox::right, BoundingBox::top, BoundingBox::bottom;
 The respective sides of the bounding box
 
-#### float BoundingBox::width()
+### float BoundingBox::width()
 The width of the bounding box
 
-#### float BoundingBox::height()
+### float BoundingBox::height()
 The height of the bounding box
+
+---
 
 ### struct FontSettings
 
-#### FontSettings::FontSettings(TArgs... args)
+### FontSettings::FontSettings(TArgs... args)
 Initialize the `FontSettings` struct with field, value pairs. The first argument must be an initializer field name, and the second is it's associated value, the third argument is another field with the forth being its value and so on. 
 
 FontSettings instance member | Initializer field name   | Description
@@ -146,9 +152,11 @@ FontSettings instance member | Initializer field name   | Description
 long faceIndex               | FIG::FACE_INDEX          | The index of the face in the font file (most font files only have one face)
 int freetypeLoadFlags        | FIG::FREETYPE_LOAD_FLAGS | Flags passed to freetype2 upon font load
 
+---
+
 ### struct FontRendererSettings
 
-#### FontRendererSettings::FontRendererSettings(TArgs... args)
+### FontRendererSettings::FontRendererSettings(TArgs... args)
 Initialize the `FontRendererSettings` struct with field, value pairs. The first argument must be an initializer field name, and the second is it's associated value, the third argument is another field with the forth being its value and so on. 
 
 FontSettings instance member | Initializer field name   | Description
@@ -161,9 +169,11 @@ bool useKerning              | FIG::USE_KERNING         | Enable or disable font
 TextAlignment alignment      | FIG::ALIGNMENT           | Alignment of text; defaults to `TextAlignment::Left`
 bool fullBackground          | FIG::FULL_BACKGROUND     | Fill in the bounds of the text (as determined by `FontRenderer::Bounds`) with the background color if true. If false, only draws backgrounds of individual glyphs, but is faster. 
 
+---
+
 ### struct FontDrawSettings
 
-#### FontRendererSettings::FontRendererSettings(TArgs... args)
+### FontRendererSettings::FontRendererSettings(TArgs... args)
 Initialize the `FontDrawSettings` struct with field, value pairs. The first argument must be an initializer field name, and the second is it's associated value, the third argument is another field with the forth being its value and so on. 
 
 FontSettings instance member | Initializer field name   | Description
@@ -175,22 +185,26 @@ bool direct                  | FIG::DIRECT              | Enable or disable dire
 int directX                  | FIG::DIRECT_X            | The x position in pixels from the left of the screen to draw the text when direct is enabled; will be ignored otherwise
 int directY                  | FIG::DIRECT_Y            | The y position in pixels from the top of the screen to draw the text when direct is enabled; will be ignored otherwise
 
+---
+
 ### struct FontRendererDrawSettings
 
-#### FontRendererDrawSettings::FontRendererDrawSettings(TArgs... args)
+### FontRendererDrawSettings::FontRendererDrawSettings(TArgs... args)
 Initialize a `FontRendererDrawSettings`, which is simply a combination of `FontRendererSettings` and `FontDrawSettings`. All fields valid in either of these can be used in this.
 
-#### FontRendererSettings FontRendererDrawSettings::RendererSettings();
+### FontRendererSettings FontRendererDrawSettings::RendererSettings();
 Get a `FontRendererSettings` with the associated values
 
-#### FontDrawSettings FontRendererDrawSettings::DrawSettings();
+### FontDrawSettings FontRendererDrawSettings::DrawSettings();
 Get a `FontDrawSettings` with the associated values
+
+---
 
 ### enum class TextAlignment
 
-#### TextAlignment::Left
+### TextAlignment::Left
 Text will all be drawn with the left bound of each line aligned to the x position of drawing.
-#### TextAlignment::Center
+### TextAlignment::Center
 Text will all be drawn with the center of each line aligned to the x position of drawing.
-#### TextAlignment::Right
+### TextAlignment::Right
 Text will all be drawn with the right bound of each line aligned to the x position of drawing.
