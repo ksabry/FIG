@@ -13,22 +13,23 @@
 
 using namespace FIG;
 
+static Font* font;
 static FontRenderer* renderer;
 std::clock_t start;
 
 void InitFont()
 {
-    static auto font = Font("C:/Windows/Fonts/times.ttf", 0, {
+    font = new Font("C:/Windows/Fonts/times.ttf", {
         FREETYPE_LOAD_FLAGS, 0
     });
-    if (font.Error())
+    if (font->Error())
     {
-        std::cout << font.Error();
+        std::cout << font->Error();
         renderer = nullptr;
     }
     else
     {
-        renderer = font.CreateRenderer(
+        renderer = font->CreateRenderer(
             FONT_SIZE, 50,
             ALIGNMENT, TextAlignment::Center
         );
@@ -40,22 +41,21 @@ void DrawFont()
     if (!start)
         start = std::clock();
 
-    float fgColor[4] = { 0.0, 0.0, 1.0, 1.0 };
+    float fgColor[4] = { 1.0, 0.0, 1.0, 1.0 };
 
     static int c = 0;
     c++;
     std::clock_t current = std::clock();
     double duration = (current - start) / (double)CLOCKS_PER_SEC;
 
-    if (renderer != nullptr)
-    {
-        renderer->Draw({
-            DIRECT, true,
-            DIRECT_X, 400,
-            DIRECT_Y, 100,
-            COLOR_FG, fgColor
-        }, "Hello, World!\nAverage of %.2f fps", c / duration);
-    }
+    font->Draw({
+        FONT_SIZE, 50.0,
+        ALIGNMENT, TextAlignment::Center,
+        DIRECT, true,
+        DIRECT_X, 300,
+        DIRECT_Y, 100,
+        COLOR_FG, fgColor
+    }, "Hello, World!\n Average of %.2f fps");
 }
 
 /////////////////////////////////////////////////////

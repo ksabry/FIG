@@ -46,6 +46,8 @@ namespace FIG
                 error = nullptr;
             else
             {
+                if (error != nullptr)
+                    delete[] error;
                 error = new char[errorLength];
                 sprintf_s(error, errorLength, format, args...);
             }

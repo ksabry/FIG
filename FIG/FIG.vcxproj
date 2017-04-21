@@ -152,6 +152,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FontRendererDrawSettings.h" />
     <ClInclude Include="FieldInitializable.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FontDrawSettings.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="FontDrawSettings.cpp" />
     <ClCompile Include="FontImpl.cpp" />
     <ClCompile Include="FontRenderer.cpp" />
+    <ClCompile Include="FontRendererDrawSettings.cpp" />
     <ClCompile Include="FontRendererImpl.cpp" />
     <ClCompile Include="FontRendererSettings.cpp" />
     <ClCompile Include="FontSettings.cpp" />

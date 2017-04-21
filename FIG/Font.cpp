@@ -4,9 +4,9 @@
 
 namespace FIG
 {
-    Font::Font(const char * const filename, long faceIndex, FontSettings settings)
+    Font::Font(const char * const filename, FontSettings settings)
     {
-        impl = new FontImpl(filename, faceIndex, settings);
+        impl = new FontImpl(filename, settings);
     }
 
     Font::~Font()
@@ -26,5 +26,15 @@ namespace FIG
     FontRenderer* Font::CreateRenderer(FontRendererSettings settings)
     {
         return impl->CreateRenderer(this, settings);
+    }
+
+    void Font::Draw(FontRendererDrawSettings settings, const char * const text)
+    {
+        return impl->Draw(this, settings, text);
+    }
+
+    void Font::Draw(FontRendererSettings renderSettings, FontDrawSettings drawSettings, const char * const text)
+    {
+        return impl->Draw(this, renderSettings, drawSettings, text);
     }
 }

@@ -53,9 +53,14 @@ namespace FIG
         {
             newSettings.colorFg = defaultColorFg;
         }
+        float colorBg[4];
         if (newSettings.colorBg == nullptr)
         {
-            float colorBg[4] = { newSettings.colorFg[0], newSettings.colorFg[1], newSettings.colorFg[2], 0.0 };
+            colorBg[0] = newSettings.colorFg[0];
+            colorBg[1] = newSettings.colorFg[1];
+            colorBg[2] = newSettings.colorFg[2];
+            colorBg[3] = 0.0;
+
             newSettings.colorBg = colorBg;
         }
 
@@ -132,6 +137,8 @@ namespace FIG
         glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, length);
         ReturnIfGLError();
 
+        delete[] points;
+
         if (!olBlendEnabled)
         {
             glDisable(GL_BLEND);
@@ -203,6 +210,8 @@ namespace FIG
             minY = lowY < minY ? lowY : minY;
             maxY = highY > maxY ? highY : maxY;
         }
+
+        delete[] points;
         return BoundingBox{ minX, maxX, minY, maxY };
     }
 
@@ -343,6 +352,7 @@ namespace FIG
             char* buff = new char[errorLength];
             glGetShaderInfoLog(vertexShader, errorLength, &length, buff);
             SetError("Could not compile vertex shader:\n%s", buff);
+            delete buff;
             return false;
         }
 
@@ -358,6 +368,7 @@ namespace FIG
             char* buff = new char[errorLength];
             glGetShaderInfoLog(fragmentShader, errorLength, &length, buff);
             SetError("Could not compile fragment shader:\n%s", buff);
+            delete buff;
             return false;
         }
 
@@ -377,6 +388,7 @@ namespace FIG
             char* buff = new char[errorLength];
             glGetProgramInfoLog(shader, errorLength, &length, buff);
             SetError("Could not link program:\n%s", buff);
+            delete buff;
             return false;
         }
 

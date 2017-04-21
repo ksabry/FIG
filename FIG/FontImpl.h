@@ -1,9 +1,11 @@
 #pragma once
-#include <map>
+#include <unordered_map>
+
 #include "EngineShared.h"
 #include "FontSettings.h"
 #include "FontRendererSettings.h"
 #include "FontRenderer.h"
+#include "FontRendererDrawSettings.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -13,7 +15,7 @@ namespace FIG
     class FontImpl
     {
     public:
-        FontImpl(const char * const filename, long faceIndex = 0, FontSettings settings = FontSettings());
+        FontImpl(const char * const filename, FontSettings settings = FontSettings());
         ~FontImpl();
 
         FT_Face face;
@@ -31,9 +33,14 @@ namespace FIG
         FontRenderer* CreateRenderer(Font* self, FontRendererSettings settings);
         static FT_Library CreateLibrary();
 
+        void Draw(Font* self, FontRendererDrawSettings settings, const char * const text);
+        void Draw(Font* self, FontRendererSettings renderSettings, FontDrawSettings drawSettings, const char * const text);
+
     private:
         FontSettings settings;
         
+        std::unordered_map<FontRendererSettings, FontRenderer*> rendererCache;
+
         static const size_t errorLength = 1024;
         char * error = nullptr;
         template<typename... TArgs>
@@ -43,13 +50,14 @@ namespace FIG
                 error = nullptr;
             else
             {
+                if (error != nullptr)
+                    delete[] error;
                 error = new char[errorLength];
                 sprintf_s(error, errorLength, format, args...);
             }
         }
         
         const char * const filename;
-        long faceIndex;
         
         FT_Int32 loadFlags;
         int filterMode;

@@ -4,6 +4,7 @@
 #include "FontRendererSettings.h"
 #include "BoundingBox.h"
 #include "FontDrawSettings.h"
+#include "FontRendererSettings.h"
 
 namespace FIG
 {
@@ -31,7 +32,7 @@ namespace FIG
             Draw(drawSettings, buffer);
             delete[] buffer;
         }
-        void Draw(FontDrawSettings, const char * const text);
+        void Draw(FontDrawSettings settings, const char * const text);
 
         BoundingBox Bounds(const char * const text);
         BoundingBox RenderBounds(const char * const text);
@@ -41,4 +42,5 @@ namespace FIG
     private:
         FontRendererImpl* impl;
     };
+
 }

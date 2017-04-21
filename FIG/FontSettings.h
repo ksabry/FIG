@@ -8,7 +8,7 @@ namespace FIG
     {
         template<typename... TArgs>
         FontSettings(TArgs... args)
-            : freetypeLoadFlags(0)
+            : freetypeLoadFlags(0), faceIndex(0)
         {
             FieldInitializable::Init(args...);
             SetDefaults();
@@ -16,9 +16,11 @@ namespace FIG
         ~FontSettings();
 
         int freetypeLoadFlags;
+        long faceIndex;
 
         void SetDefaults();
     };
 
     ADD_FIELD(int, FREETYPE_LOAD_FLAGS, FontSettings, freetypeLoadFlags);
+    ADD_FIELD(long, FACE_INDEX, FontSettings, faceIndex);
 }

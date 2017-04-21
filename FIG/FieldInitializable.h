@@ -52,10 +52,9 @@ namespace FIG
         }
     };
 
-#define ADD_FIELD(type,fieldName,inheritName,innerField) \
-    constexpr _Field<inheritName, __LINE__> fieldName;\
+#define ADD_EXISTING_FIELD(type,fieldName,inheritName,innerField) \
     template<typename T>\
-    struct _FieldSetter<inheritName, _Field<inheritName, __LINE__>, T>\
+    struct _FieldSetter<inheritName, _Field<_##fieldName##_TYPE, _##fieldName##_ID>, T>\
     {\
         static void set( FieldInitializable <inheritName> * container, T val)\
         {\
@@ -64,4 +63,10 @@ namespace FIG
             inherit->innerField = val;\
         }\
     }
+
+#define ADD_FIELD(type,fieldName,inheritName,innerField) \
+    constexpr int _##fieldName##_ID = __LINE__; \
+    typedef inheritName _##fieldName##_TYPE; \
+    constexpr _Field<_##fieldName##_TYPE, _##fieldName##_ID> fieldName;\
+    ADD_EXISTING_FIELD(type,fieldName,inheritName,innerField)
 }

@@ -60,6 +60,9 @@
     <ClInclude Include="FontDrawSettings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FontRendererDrawSettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -87,6 +90,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FontDrawSettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FontRendererDrawSettings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

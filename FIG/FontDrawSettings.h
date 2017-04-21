@@ -10,7 +10,7 @@ namespace FIG
     public:
         template<typename... TArgs>
         FontDrawSettings(TArgs... args)
-            : colorFg(nullptr), colorBg(nullptr), transform(nullptr), directX(0), directY(0)
+            : colorFg(nullptr), colorBg(nullptr), transform(nullptr), direct(false), directX(0), directY(0)
         {
             FieldInitializable::Init(args...);
         }
@@ -18,11 +18,8 @@ namespace FIG
 
         const float* colorFg;
         const float* colorBg;
-        
         const float* transform;
-
         bool direct;
-
         int directX;
         int directY;
 
