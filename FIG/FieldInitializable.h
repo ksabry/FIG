@@ -8,13 +8,37 @@ namespace FIG
     template<typename TInherit> 
     struct FieldInitializable;
 
-    template<typename TContainer, int ID>
-    struct _Field {};
+    template<typename TField, typename type>
+    struct _FieldValuePair;
 
-    template<typename TContainer, typename TField, typename type>
+    template<typename TContainer, int ID>
+    struct _Field
+    {
+        template<typename TVal>
+        _FieldValuePair<_Field<TContainer, ID>, TVal> operator=(const TVal other) const
+        {
+            return _FieldValuePair<_Field<TContainer, ID>, TVal>(*this, other);
+        }
+    };
+
+    struct _FieldValuePair_Base {};
+
+    template<typename TField, typename TVal>
+    struct _FieldValuePair : _FieldValuePair_Base
+    {
+    public:
+        _FieldValuePair(TField field, TVal value)
+            : field(field), value(value)
+        {
+        }
+        TField field;
+        TVal value;
+    };
+
+    template<typename TContainer, typename TField, typename TVal>
     struct _FieldSetter
     {
-        static void set(FieldInitializable<TContainer>*, type)
+        static void set(FieldInitializable<TContainer>*, TVal)
         {
             static_assert(false, "Unrecognized field in FontRendererSettings initialization");
         }
@@ -30,15 +54,15 @@ namespace FIG
             static_assert(false, "Malformed arguments to FieldInitializable; must be in field, value pairs");
         }
         template<typename TField, typename TVal, typename... TArgs>
-        void Init(TField, TVal val, TArgs... args)
+        void Init(_FieldValuePair<TField, TVal> pair, TArgs... args)
         {
-            SetField<TField>(val);
+            SetField<TField>(pair.value);
             Init(args...);
         }
         template<typename TField, typename TVal>
-        void Init(TField, TVal val)
+        void Init(_FieldValuePair<TField, TVal> pair)
         {
-            SetField<TField>(val);
+            SetField<TField>(pair.value);
         };
         template<>
         void Init<>()
@@ -53,14 +77,14 @@ namespace FIG
     };
 
 #define ADD_EXISTING_FIELD(type,fieldName,inheritName,innerField) \
-    template<typename T>\
-    struct _FieldSetter<inheritName, _Field<_##fieldName##_TYPE, _##fieldName##_ID>, T>\
+    template<typename TVal>\
+    struct _FieldSetter<inheritName, _Field<_##fieldName##_TYPE, _##fieldName##_ID>, TVal>\
     {\
-        static void set( FieldInitializable <inheritName> * container, T val)\
+        static void set( FieldInitializable <inheritName> * container, TVal val)\
         {\
-            static_assert(std::is_convertible< T, type >::value, "Invalid type for FontRendererSettings field " #fieldName " (must be " #type ")");\
+            static_assert(std::is_convertible< TVal, type >::value, "Invalid type for FontRendererSettings field " #fieldName " (must be " #type ")");\
             inheritName* inherit = (inheritName*)(container);\
-            inherit->innerField = val;\
+            inherit->innerField = (type)val;\
         }\
     }
 

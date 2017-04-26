@@ -10,12 +10,12 @@ namespace FIG
     FontDrawSettings FontDrawSettings::Copy()
     {
         return FontDrawSettings(
-            COLOR_FG, colorFg,
-            COLOR_BG, colorBg,
-            TRANSFORM, transform,
-            DIRECT, direct,
-            DIRECT_X, directX,
-            DIRECT_Y, directY
+            COLOR_FG  = colorFg,
+            COLOR_BG  = colorBg,
+            TRANSFORM = transform,
+            DIRECT    = direct,
+            DIRECT_X  = directX,
+            DIRECT_Y  = directY
         );
     }
 }

@@ -42,7 +42,7 @@ namespace FIG
         }
         void Draw(FontRendererDrawSettings settings, const char * const text);
 
-        void Font::Draw(FontRendererSettings renderSettings, FontDrawSettings drawSettings, const char * const text);
+        void Draw(FontRendererSettings renderSettings, FontDrawSettings drawSettings, const char * const text);
 
         inline FontImpl* Impl() { return impl; }
 

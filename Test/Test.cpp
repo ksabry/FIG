@@ -19,9 +19,11 @@ std::clock_t start;
 
 void InitFont()
 {
-    font = new Font("C:/Windows/Fonts/times.ttf", {
-        FREETYPE_LOAD_FLAGS, 0
+    font = new FIG::Font("/Windows/Fonts/times.ttf", {
+        FACE_INDEX          = 0,
+        FREETYPE_LOAD_FLAGS = 0
     });
+
     if (font->Error())
     {
         std::cout << font->Error();
@@ -30,8 +32,8 @@ void InitFont()
     else
     {
         renderer = font->CreateRenderer(
-            FONT_SIZE, 50,
-            ALIGNMENT, TextAlignment::Center
+            FONT_SIZE = 50,
+            ALIGNMENT = TextAlignment::Center
         );
     }
 }
@@ -41,7 +43,7 @@ void DrawFont()
     if (!start)
         start = std::clock();
 
-    float fgColor[4] = { 1.0, 0.0, 1.0, 1.0 };
+    float fgColor[4] = { 1.0, 0.0, 0.0, 1.0 };
 
     static int c = 0;
     c++;
@@ -49,13 +51,13 @@ void DrawFont()
     double duration = (current - start) / (double)CLOCKS_PER_SEC;
 
     font->Draw({
-        FONT_SIZE, 50.0,
-        ALIGNMENT, TextAlignment::Center,
-        DIRECT, true,
-        DIRECT_X, 300,
-        DIRECT_Y, 100,
-        COLOR_FG, fgColor
-    }, "Hello, World!\n Average of %.2f fps");
+        FONT_SIZE = 20.0,
+        ALIGNMENT = TextAlignment::Center,
+        DIRECT    = true,
+        DIRECT_X  = 300,
+        DIRECT_Y  = 100,
+        COLOR_FG  = fgColor
+    }, "I have a level %d foo, and level %.2f bar", 5, 2.4);
 }
 
 /////////////////////////////////////////////////////

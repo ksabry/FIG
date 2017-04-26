@@ -11,8 +11,8 @@ namespace FIG
     class ENGINE_SHARED FontRendererDrawSettings : public FieldInitializable<FontRendererDrawSettings>
     {
     public:
-        template<typename... TArgs>
-        FontRendererDrawSettings(TArgs... args)
+            template<typename... TArgs>
+            FontRendererDrawSettings(TArgs... args)
         {
             FontRendererSettings renderSettings = FontRendererSettings();
             FontDrawSettings drawSettings = FontDrawSettings();
